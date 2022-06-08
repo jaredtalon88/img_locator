@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Locator</title>
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <style>
+        body{
+            width: 90%;
+            margin: auto;
+            font-family: sans-serif;
+            font-size: x-large;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<br><br>
+Longitude / Latitude <br>
+{{data['GPSLatitudeRef']}}
+{{data['GPSLatitude']}}
+{{data['GPSLongitudeRef']}}
+{{data['GPSLongitude']}}
+<br>
+<iframe
+  width="700"
+  height="400"
+  frameborder="0" style="border:0"
+  referrerpolicy="no-referrer-when-downgrade"
+  src="{{url}}"
+  allowfullscreen>
+</iframe>
+<br><br>
+Uploaded photo:<br>
+<img src="../static/image.jpg" width="300" height="300">
+<br><br><br>
+<form method="POST" action="/"
+    enctype="multipart/form-data">
+<input type="file" name="filename" style="width:300px">
+<input type="submit" value="Submit">
+<br><br>
+</form>
+</body>
+</html>

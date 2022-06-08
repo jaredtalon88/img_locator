@@ -1,0 +1,41 @@
+#!/bin/bash
+
+images () {
+  docker-compose build --parallel --build-arg AUID=${AUID} --build-arg GUID=${GUID}
+}
+
+up () {
+  docker-compose up --detach
+}
+
+down () {
+  docker-compose down img-locator
+}
+
+# get a shell - can be used multiple times
+shell () {
+  up && docker-compose exec img-locator /bin/bash
+}
+
+deploy () {
+  gcloud builds submit . --tag=gcr.io/talon-322920/img-locator --project talon-322920
+}
+
+#############################################################################
+# boilerplate
+set -e -o pipefail
+
+log () {
+  printf "[%s] %s %s - %s\n" "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" "$1" "$(basename $0)" "$2" >&2
+}
+
+list () {
+  compgen -A function
+}
+
+if list | grep -qFx -- "${1:-}"
+then "$@"; exit "$?"
+else
+  printf "unknown command: %s\n" "$1" >&2
+  exit 1
+fi
