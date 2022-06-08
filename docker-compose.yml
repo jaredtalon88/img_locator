@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  img-locator:
+    build: .
+    ports:
+      - "8080:8080"
+    command: [/bin/sleep, '432000']
+    environment:
+      - TESTING_ENV="true"
+    volumes:
+      - .:/app

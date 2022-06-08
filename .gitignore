@@ -1,7 +1,6 @@
 
 *.jpg
-docker-compose.yml
-.pytest_cache
+.pytest_cachegi
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 

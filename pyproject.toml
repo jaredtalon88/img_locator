@@ -13,6 +13,7 @@ python-multipart = "^0.0.5"
 python-magic = "^0.4.26"
 Pillow = "^9.1.1"
 pytest = "^7.1.2"
+python-dotenv = "^0.20.0"
 
 [tool.poetry.dev-dependencies]
 

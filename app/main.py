@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request, UploadFile
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -11,19 +12,18 @@ import urllib.parse
 
 
 app = FastAPI()
+load_dotenv()
 templates = Jinja2Templates(directory="templates/")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 favicon_path = "favicon.ico"
-
 logging.getLogger().setLevel(logging.INFO)
 
 
 @app.get("/")
 def get_main(request: Request):
-    result = ""
     return templates.TemplateResponse(
         "index.html",
-        context={"request": request, "result": result},
+        context={"request": request},
     )
 
 
@@ -32,15 +32,22 @@ async def post_main(request: Request, filename: UploadFile, webpage="result.html
     data = ""
     url = ""
 
+    # Write the uploaded file to the local filesystem
     with open("/app/static/image.jpg", "wb") as image:
         image.write(await filename.read())
 
+    # Here we are checking if we have an image with Exif data. If not, display the nodata.html site
+    # and pass along a message.
     if "image" and "Exif" not in magic.from_file("/app/static/image.jpg"):
         logging.error("This aint compatible dog")
         logging.info(f'Image type: {magic.from_file("/app/static/image.jpg")}')
         data = "Sorry, no EXIF data was found."
         webpage = "nodata.html"
     else:
+        # Main workflow. Extract Exif data, then extract GPS data. Check for scrubbed GPS data.
+        # If valid GPS data, convert from Degree Minute Second to Direct Decimal
+        # Then convert Direct Decimal to PlusCode, and encode it.
+        # Construct IFrame URL and pass to Jinja template as url variable.
         logging.info(f'Image type: {magic.from_file("/app/static/image.jpg")}')
         exif = get_exif()
         data = get_geo(exif)
